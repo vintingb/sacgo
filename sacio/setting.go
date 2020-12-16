@@ -7,14 +7,6 @@
 
 package sacio
 
-import (
-	"bytes"
-	"encoding/binary"
-	"io/ioutil"
-	"os"
-	"unsafe"
-)
-
 type SacHead struct {
 	Delta, Depmin, Depmax, Scale, Odelta             float32 //0
 	B, E, O, A, Internal1                            float32 //20
@@ -49,36 +41,23 @@ type SacHead struct {
 	KnetwK, Kdatrd, Kinst                            [8]byte
 }
 
+type SacHeadString struct {
+	Kstnm                  string
+	Kevnm                  string
+	Khole, Ko, Ka          string
+	Kt0, Kt1, Kt2          string
+	Kt3, Kt4, Kt5          string
+	Kt6, Kt7, Kt8          string
+	Kt9, Kf, KUser0        string
+	Kuser1, Kuser2, Kcmpnm string
+	KnetwK, Kdatrd, Kinst  string
+}
+
 type SacData struct {
 	Data []float32
 }
 
-func (h *SacHead) ReadHead(fileName string) {
-	fp, _ := os.Open(fileName)
-	defer fp.Close()
-	// 创建byte slice, 以读取bytes.
-	dataBytes := make([]byte, unsafe.Sizeof(*h))
-	n, _ := fp.Read(dataBytes)
-	dataBytes = dataBytes[:n]
-	// 将bytes转成对应的struct
-	_ = binary.Read(bytes.NewBuffer(dataBytes), binary.LittleEndian, h)
-}
-
-func (d *SacData) ReadData(fileName string) {
-	fp, _ := os.Open(fileName)
-	defer fp.Close()
-	r, _ := ioutil.ReadAll(fp)
-	r = r[632:]
-	data := make([]byte, 4)
-	n := 0
-	var k float32
-	for {
-		if n >= len(r) {
-			break
-		}
-		data = r[n : n+4]
-		n += 4
-		_ = binary.Read(bytes.NewBuffer(data), binary.LittleEndian, &k)
-		d.Data = append(d.Data, k)
-	}
+type Sac struct {
+	sacHead SacHead
+	sacData SacData
 }
