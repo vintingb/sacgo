@@ -7,10 +7,16 @@ import (
 	"os"
 )
 
-func (d *SacData) ReadData(fileName string) {
-	fp, _ := os.Open(fileName)
+func (d *SacData) ReadData(fileName string) error {
+	fp, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
 	defer fp.Close()
-	r, _ := ioutil.ReadAll(fp)
+	r, err := ioutil.ReadAll(fp)
+	if err != nil {
+		return err
+	}
 	r = r[632:]
 	data := make([]byte, 4)
 	n := 0
@@ -24,4 +30,5 @@ func (d *SacData) ReadData(fileName string) {
 		_ = binary.Read(bytes.NewBuffer(data), binary.LittleEndian, &k)
 		d.Data = append(d.Data, k)
 	}
+	return nil
 }

@@ -35,7 +35,19 @@ func (sac *Sac) Sac2asc(filename string) error {
 	return nil
 }
 
-func (sac *Sac) Read(fileName string) {
-	sac.sacData.ReadData(fileName)
-	sac.sacHead.ReadHead(fileName)
+func (sac *Sac) Read(fileName string) error {
+	err := sac.sacData.ReadData(fileName)
+	if err != nil {
+		return err
+	}
+	err = sac.sacHead.ReadHead(fileName)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (sac *Sac) NewSac(head *SacHead, data *SacData) {
+	sac.sacHead = *head
+	sac.sacData = *data
 }

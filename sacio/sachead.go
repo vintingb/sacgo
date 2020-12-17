@@ -9,15 +9,22 @@ import (
 	"unsafe"
 )
 
-func (h *SacHead) ReadHead(fileName string) {
-	fp, _ := os.Open(fileName)
+func (h *SacHead) ReadHead(fileName string) error {
+	fp, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
 	defer fp.Close()
 	// 创建byte slice, 以读取bytes.
 	dataBytes := make([]byte, unsafe.Sizeof(*h))
-	n, _ := fp.Read(dataBytes)
+	n, err := fp.Read(dataBytes)
+	if err != nil {
+		return err
+	}
 	dataBytes = dataBytes[:n]
 	// 将bytes转成对应的struct
 	_ = binary.Read(bytes.NewBuffer(dataBytes), binary.LittleEndian, h)
+	return nil
 }
 
 func (h *SacHead) Format() string {
