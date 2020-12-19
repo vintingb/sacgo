@@ -6,6 +6,11 @@ import (
 	"os"
 )
 
+type Sac struct {
+	sacHead SacHead
+	sacData SacData
+}
+
 func (sac *Sac) Sac2asc(filename string) error {
 	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0666)
 	if err != nil {

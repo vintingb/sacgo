@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+type SacData struct {
+	Data []float32
+}
+
 func (d *SacData) ReadData(fileName string) error {
 	fp, err := os.Open(fileName)
 	if err != nil {

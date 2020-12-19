@@ -1,0 +1,7 @@
+/dist/
+/test/
+.gitignore
+.goreleaser.yml
+*.SAC
+*.txt
+*.ASC
