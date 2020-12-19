@@ -12,3 +12,22 @@
 =======
 
 ![例子](example.gif)
+
+![example](test.png)
+
+支持的命令
+========
+
+- r (read)
+- p (plot, plot1)
+- w (write)
+- k (kill q quit)
+- lh
+- ls
+
+感谢
+========
+
+[***Liner***](https://github.com/peterh/liner)
+
+[***plot***](https://github.com/gonum/plot)

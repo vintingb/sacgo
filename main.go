@@ -19,14 +19,7 @@ var (
 )
 
 func init() {
-	pwd, _ := os.Getwd()
-	fileInfoList, err := ioutil.ReadDir(pwd)
-	if err != nil {
-		log.Fatal(err)
-	}
-	for i := range fileInfoList {
-		completions = append(completions, fileInfoList[i].Name())
-	}
+	updateFileList()
 }
 
 func main() {
@@ -37,6 +30,7 @@ func main() {
 	defer line.Close()
 	line.SetCtrlCAborts(true)
 	line.SetCompleter(func(line string) (c []string) {
+		updateFileList()
 		lines := strings.Fields(line)
 		s := lines[len(lines)-1]
 		line = line[:len(line)-len(s)]
@@ -94,14 +88,14 @@ func main() {
 								}
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {
-									fmt.Printf("no found %s in SACHead", headString)
+									fmt.Printf("no found %s in SACHead\n", headString)
 									continue
 								}
 								fmt.Printf("   %s = %v\n", headString, val)
 							case 'I':
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {
-									fmt.Printf("no found %s in SACHead", headString)
+									fmt.Printf("no found %s in SACHead\n", headString)
 									continue
 								}
 								v := int32(val.Int())
@@ -120,7 +114,7 @@ func main() {
 							case 'L':
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {
-									fmt.Printf("no found %s in SACHead", headString)
+									fmt.Printf("no found %s in SACHead\n", headString)
 									continue
 								}
 								v := int32(val.Int())
@@ -134,7 +128,7 @@ func main() {
 							default:
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {
-									fmt.Printf("no found %s in SACHead", headString)
+									fmt.Printf("no found %s in SACHead\n", headString)
 									continue
 								}
 								fmt.Printf("   %s = %v\n", headString, val)
@@ -155,6 +149,7 @@ func main() {
 						}
 					}
 				case "ls":
+					updateFileList()
 					for _, v := range completions {
 						fmt.Printf("%v ", v)
 					}
@@ -248,4 +243,16 @@ func kzdate(nzyear, nzjday int32) string {
 func kztime(nzhour, nzmin, nzsec, nzmsec int32) string {
 	return fmt.Sprintf("   kztime = %v:%v:%v.%v", nzhour, nzmin, nzsec, nzmsec)
 
+}
+
+func updateFileList() {
+	completions = []string{}
+	pwd, _ := os.Getwd()
+	fileInfoList, err := ioutil.ReadDir(pwd)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i := range fileInfoList {
+		completions = append(completions, fileInfoList[i].Name())
+	}
 }

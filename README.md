@@ -11,6 +11,7 @@ Features
 
 Document
 ========
+
 [中文](doc/README_cn.md)
 
 Examples
@@ -18,3 +19,21 @@ Examples
 
 ![example](doc/example.gif)
 
+![example](doc/test.png)
+
+Supported Command
+========
+
+- r (read)
+- p (plot, plot1)
+- w (write)
+- k (kill q quit)
+- lh
+- ls
+
+Thanks
+========
+
+[***Liner***](https://github.com/peterh/liner)
+
+[***plot***](https://github.com/gonum/plot)
