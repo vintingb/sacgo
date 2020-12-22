@@ -44,7 +44,7 @@ func (d *PicData) SavePic(fileName string) {
 	if err != nil {
 		panic(err)
 	}
-	if err := p.Save(10*vg.Inch, 5*vg.Inch, fileName+".pdf"); err != nil {
+	if err := p.Save(20*vg.Centimeter, 5*vg.Centimeter, fileName+".pdf"); err != nil {
 		panic(err)
 	}
 	defer Wg.Done()

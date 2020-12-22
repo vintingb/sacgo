@@ -38,6 +38,9 @@ func main() {
 			if strings.HasPrefix(n, strings.ToLower(s)) {
 				c = append(c, line+n)
 			}
+			if strings.HasPrefix(n, strings.ToUpper(s)) {
+				c = append(c, line+n)
+			}
 		}
 		return
 	})
@@ -163,13 +166,16 @@ func main() {
 						sacpic.Wg.Add(1)
 						picData := new(sacpic.PicData)
 						picData.NewPicData(&sacHead[k], &sacData[k])
-						inputFileName := strings.Split(inputFileNames[k], ".")
+						inputFileName := strings.Split(inputFileNames[k], ".SAC")
+						if len(inputFileName) == 1 {
+							inputFileName = strings.Split(inputFileNames[k], ".sac")
+						}
 						go picData.SavePic(inputFileName[0])
 					}
 					sacpic.Wg.Wait()
 					fmt.Println("Picture saved successfully")
 				default:
-					fmt.Println("Not currently supported")
+					fmt.Println("Command not currently supported")
 				}
 			}
 		}
@@ -201,23 +207,44 @@ func strFirstToUpper(str string) string {
 }
 
 func readSACFile(inputFileNames *[]string, arguments []string, sacHead *[]sacio.SacHead, sacData *[]sacio.SacData) error {
-	*inputFileNames = append(*inputFileNames, arguments...)
-	for _, inputFileName := range arguments {
-		if !isFileExist(inputFileName) {
-			panic("File Not Found")
+	if arguments[0] == "*.sac" || arguments[0] == "*.SAC" {
+		updateFileList()
+		for _, inputFileName := range completions {
+			if strings.HasSuffix(inputFileName, ".SAC") || strings.HasSuffix(inputFileName, ".sac") {
+				*inputFileNames = append(*inputFileNames, inputFileName)
+				tmpHead := new(sacio.SacHead)
+				tmpData := new(sacio.SacData)
+				err := tmpHead.ReadHead(inputFileName)
+				if err != nil {
+					return err
+				}
+				err = tmpData.ReadData(inputFileName)
+				if err != nil {
+					return err
+				}
+				*sacHead = append(*sacHead, *tmpHead)
+				*sacData = append(*sacData, *tmpData)
+			}
 		}
-		tmpHead := new(sacio.SacHead)
-		tmpData := new(sacio.SacData)
-		err := tmpHead.ReadHead(inputFileName)
-		if err != nil {
-			return err
+	} else {
+		*inputFileNames = append(*inputFileNames, arguments...)
+		for _, inputFileName := range arguments {
+			if !isFileExist(inputFileName) {
+				panic("File Not Found")
+			}
+			tmpHead := new(sacio.SacHead)
+			tmpData := new(sacio.SacData)
+			err := tmpHead.ReadHead(inputFileName)
+			if err != nil {
+				return err
+			}
+			err = tmpData.ReadData(inputFileName)
+			if err != nil {
+				return err
+			}
+			*sacHead = append(*sacHead, *tmpHead)
+			*sacData = append(*sacData, *tmpData)
 		}
-		err = tmpData.ReadData(inputFileName)
-		if err != nil {
-			return err
-		}
-		*sacHead = append(*sacHead, *tmpHead)
-		*sacData = append(*sacData, *tmpData)
 	}
 	return nil
 }
