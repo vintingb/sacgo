@@ -1,5 +1,6 @@
 /dist/
 /test/
+/.idea/
 .gitignore
 .goreleaser.yml
 *.SAC
