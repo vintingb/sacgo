@@ -23,8 +23,7 @@ func init() {
 	updateFileList()
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
-		fmt.Printf("Fail to read file: %v", err)
-		os.Exit(1)
+		return
 	}
 
 	sacpic.FileType = cfg.Section("").Key("FileType").In("pdf", []string{
