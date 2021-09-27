@@ -19,7 +19,7 @@ Examples
 
 ![example](doc/example.gif)
 
-![example](doc/test.png)
+![example](doc/example.png)
 
 Supported Command
 ========

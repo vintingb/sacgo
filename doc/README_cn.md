@@ -13,7 +13,7 @@
 
 ![例子](example.gif)
 
-![example](test.png)
+![example](example.png)
 
 支持的命令
 ========
