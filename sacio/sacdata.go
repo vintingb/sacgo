@@ -16,7 +16,11 @@ func (d *SacData) ReadData(fileName string) error {
 	if err != nil {
 		return err
 	}
-	defer fp.Close()
+	defer func(fp *os.File) {
+		err := fp.Close()
+		if err != nil {
+		}
+	}(fp)
 	r, err := ioutil.ReadAll(fp)
 	if err != nil {
 		return err

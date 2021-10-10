@@ -23,6 +23,7 @@ func init() {
 	updateFileList()
 	cfg, err := ini.Load("config.ini")
 	if err != nil {
+		log.Print("not find config")
 		return
 	}
 
@@ -31,7 +32,8 @@ func init() {
 	})
 	sacpic.PicHeight = vg.Length(cfg.Section("").Key("PicHeight").RangeFloat64(5, 5, 20))
 	sacpic.PicWeight = vg.Length(cfg.Section("").Key("PicWeight").RangeFloat64(20, 10, 40))
-	sacpic.LineSize = cfg.Section("").Key("LineSize").RangeFloat64(0.1, 0.05, 1)
+	sacpic.LineSize = cfg.Section("").Key("LineSize").RangeFloat64(0.1, 0.01, 1)
+	log.Printf("\nPicHeight: %v\nPicWeight: %v\nLineSize: %v", sacpic.PicHeight, sacpic.PicWeight, sacpic.LineSize)
 }
 
 func main() {
@@ -98,14 +100,14 @@ func main() {
 							headString := strFirstToUpper(strings.ToLower(headString))
 							immutable := reflect.ValueOf(&tmp).Elem()
 							switch headString[0] {
-							case 'K':
+							case sacio.K.K:
 								hs := tmp.HeadToString()
 								immutable := reflect.ValueOf(hs).Elem()
-								if headString == "Kzdate" {
+								if headString == sacio.K.Kzdate {
 									fmt.Println(kzdate(tmp.Nzyear, tmp.Nzjday))
 									continue
 								}
-								if headString == "Kztime" {
+								if headString == sacio.K.Kztime {
 									fmt.Println(kztime(tmp.Nzhour, tmp.Nzmin, tmp.Nzsec, tmp.Nzmsec))
 									continue
 								}
@@ -115,7 +117,7 @@ func main() {
 									continue
 								}
 								fmt.Printf("   %s = %v\n", headString, val)
-							case 'I':
+							case sacio.I.I:
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {
 									fmt.Printf("no found %s in SACHead\n", headString)
@@ -125,15 +127,15 @@ func main() {
 								if v == sacio.IDefault {
 									continue
 								}
-								if headString == "Iftype" {
-									fmt.Printf("   %s = %v\n", headString, sacio.IFTYPE[v])
+								switch headString {
+								case sacio.I.Iftype:
+									fmt.Printf("   %s = %v\n", headString, sacio.Iftype(v))
+								case sacio.I.Idep:
+									fmt.Printf("   %s = %v\n", headString, sacio.Idep(v))
+								case sacio.I.Iztype:
+									fmt.Printf("   %s = %v\n", headString, sacio.Iztype(v))
 								}
-								if headString == "Idep" {
-									fmt.Printf("   %s = %v\n", headString, sacio.IDEP[v])
-								}
-								if headString == "Iztype" {
-									fmt.Printf("   %s = %v\n", headString, sacio.IZTYPE[v])
-								}
+
 							case 'L':
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {

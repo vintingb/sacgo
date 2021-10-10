@@ -60,7 +60,12 @@ func (h *SacHead) ReadHead(fileName string) error {
 	if err != nil {
 		return err
 	}
-	defer fp.Close()
+	defer func(fp *os.File) {
+		err := fp.Close()
+		if err != nil {
+
+		}
+	}(fp)
 	// 创建byte slice, 以读取bytes.
 	dataBytes := make([]byte, unsafe.Sizeof(*h))
 	n, err := fp.Read(dataBytes)

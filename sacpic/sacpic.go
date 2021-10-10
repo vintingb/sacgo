@@ -8,6 +8,9 @@ import (
 	"gonum.org/v1/plot/vg"
 	"gonum.org/v1/plot/vg/draw"
 	"image/color"
+	"log"
+	"os/exec"
+	"runtime"
 	"sacgo/sacio"
 	"sync"
 )
@@ -17,20 +20,24 @@ var (
 	PicHeight vg.Length = 5
 	PicWeight vg.Length = 20
 
-	H        = PicHeight * vg.Centimeter // 图片的高度
-	W        = PicWeight * vg.Centimeter // 图片的长度
 	LineSize = 0.1
 
 	// FileType .eps, .jpg, .jpeg, .pdf, .png, .svg, .tex, .tif and .tiff.
 	FileType = ".pdf"
+)
 
-	DefaultLineStyle = draw.LineStyle{
+func newSize() (vg.Length, vg.Length) {
+	return PicWeight * vg.Centimeter, PicHeight * vg.Centimeter
+}
+
+func newLineStyle() draw.LineStyle {
+	return draw.LineStyle{
 		Color:    color.Black,
 		Width:    vg.Points(LineSize),
 		Dashes:   []vg.Length{},
 		DashOffs: 0,
 	}
-)
+}
 
 type PicData struct {
 	Sums int32
@@ -68,10 +75,13 @@ func (d *PicData) SavePic(fileName string) {
 		panic(err)
 	}
 	p.Title.Text = d.time
+	W, H := newSize()
 	if err := p.Save(W, H, fileName+FileType); err != nil {
 		panic(err)
 	}
 	defer Wg.Done()
+	OpenBrowser(fileName + FileType)
+
 }
 
 func AddLines(plt *plot.Plot, name string, pts plotter.XYs) error {
@@ -96,7 +106,7 @@ func NewLine(xys plotter.XYer) (*plotter.Line, error) {
 	}
 	return &plotter.Line{
 		XYs:       data,
-		LineStyle: DefaultLineStyle,
+		LineStyle: newLineStyle(),
 	}, nil
 }
 
@@ -116,4 +126,21 @@ func kzdate(nzyear, nzjday int32) string {
 
 	}
 	return ""
+}
+
+func OpenBrowser(url string) {
+	var err error
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
 }
