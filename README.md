@@ -25,7 +25,7 @@ Supported Command
 ========
 
 - r (read)
-- p (plot, plot1)
+- p (plot, plot1, plot2)
 - w (write)
 - k (kill q quit)
 - lh

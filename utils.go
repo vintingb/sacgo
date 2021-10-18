@@ -9,6 +9,13 @@ import (
 	"strings"
 )
 
+const (
+	zeroLength   = "floats: zero length slice"
+	shortSpan    = "floats: slice length less than 2"
+	badLength    = "floats: slice lengths do not match"
+	badDstLength = "floats: destination slice length does not match input"
+)
+
 func isFileExist(path string) bool {
 	_, err := os.Lstat(path)
 	return !os.IsNotExist(err)

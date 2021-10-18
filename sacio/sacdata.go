@@ -8,7 +8,7 @@ import (
 )
 
 type SacData struct {
-	Data []float32
+	Data []float64
 }
 
 func (d *SacData) ReadData(fileName string) error {
@@ -36,7 +36,7 @@ func (d *SacData) ReadData(fileName string) error {
 		data = r[n : n+4]
 		n += 4
 		_ = binary.Read(bytes.NewBuffer(data), binary.LittleEndian, &k)
-		d.Data = append(d.Data, k)
+		d.Data = append(d.Data, float64(k))
 	}
 	return nil
 }

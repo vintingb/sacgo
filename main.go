@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/peterh/liner"
+	"gonum.org/v1/gonum/floats"
 	"gonum.org/v1/plot/vg"
 	"gopkg.in/ini.v1"
 	"log"
@@ -89,6 +90,12 @@ func main() {
 						fmt.Println(err)
 						continue
 					}
+					for index := range sacHead {
+						sacHead[index].Depmax = float32(floats.Max(sacData[index].Data))
+						sacHead[index].Depmin = float32(floats.Min(sacData[index].Data))
+						sacHead[index].Depmen = float32(floats.Sum(sacData[index].Data) / float64(len(sacData[index].Data)))
+					}
+
 				case "lh":
 					if len(sacHead) == 0 {
 						fmt.Println("no data, please read SAC file first")
@@ -135,7 +142,6 @@ func main() {
 								case sacio.I.Iztype:
 									fmt.Printf("   %s = %v\n", headString, sacio.Iztype(v))
 								}
-
 							case 'L':
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {
@@ -151,6 +157,7 @@ func main() {
 									continue
 								}
 							default:
+								log.Println(headString)
 								val := immutable.FieldByName(headString)
 								if val.Kind() == reflect.Invalid {
 									fmt.Printf("no found %s in SACHead\n", headString)
@@ -179,23 +186,29 @@ func main() {
 						fmt.Printf("%v ", v)
 					}
 					fmt.Println()
-				case string('p'), "plot1", "p1":
+				case string('p'), "plot":
 					if len(sacHead) == 0 {
 						fmt.Println("no data, please read SAC file first")
 						continue
 					}
-					for k := range inputFileNames {
-						sacpic.Wg.Add(1)
-						picData := new(sacpic.PicData)
-						picData.NewPicData(&sacHead[k], &sacData[k])
-						inputFileName := strings.Split(inputFileNames[k], ".SAC")
-						if len(inputFileName) == 1 {
-							inputFileName = strings.Split(inputFileNames[k], ".sac")
-						}
-						go picData.SavePic(inputFileName[0])
-					}
-					sacpic.Wg.Wait()
+					sacpic.Plot(inputFileNames, sacHead, sacData)
 					fmt.Println("Picture saved successfully")
+				case "p1", "plot1":
+					if len(sacHead) == 0 {
+						fmt.Println("no data, please read SAC file first")
+						continue
+					}
+					sacpic.Plot1(inputFileNames, sacHead, sacData)
+					fmt.Println("Picture saved successfully")
+					sacpic.OpenBrowser("P1" + sacpic.FileType)
+				case "p2", "plot2":
+					if len(sacHead) == 0 {
+						fmt.Println("no data, please read SAC file first")
+						continue
+					}
+					sacpic.Plot2(inputFileNames, sacHead, sacData)
+					fmt.Println("Picture saved successfully")
+					sacpic.OpenBrowser("P2" + sacpic.FileType)
 				default:
 					fmt.Println("Command not currently supported")
 				}
