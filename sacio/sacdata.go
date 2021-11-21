@@ -3,12 +3,15 @@ package sacio
 import (
 	"bytes"
 	"encoding/binary"
+	"gonum.org/v1/gonum/dsp/fourier"
 	"io/ioutil"
+	"math/cmplx"
 	"os"
 )
 
 type SacData struct {
 	Data []float64
+	Abs  []float64
 }
 
 func (d *SacData) ReadData(fileName string) error {
@@ -39,4 +42,13 @@ func (d *SacData) ReadData(fileName string) error {
 		d.Data = append(d.Data, float64(k))
 	}
 	return nil
+}
+
+func (d *SacData) Fft() {
+	var lens = len(d.Data)
+	fft := fourier.NewFFT(lens)
+	coeff := fft.Coefficients(nil, d.Data)
+	for _, c := range coeff {
+		d.Abs = append(d.Abs, cmplx.Abs(c))
+	}
 }

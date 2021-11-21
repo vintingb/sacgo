@@ -24,6 +24,8 @@ const (
 	plot0 mod = iota
 	plot1
 	plot2
+	plotFft0
+	plotFft1
 )
 
 func newPicSize() (vg.Length, vg.Length) {

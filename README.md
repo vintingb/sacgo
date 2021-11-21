@@ -30,6 +30,10 @@ Supported Command
 - k (kill q quit)
 - lh
 - ls
+- fft
+- pf
+- pf1
+- pf2
 
 Thanks
 ========

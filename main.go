@@ -33,7 +33,7 @@ func init() {
 	})
 	sacpic.PicHeight = vg.Length(cfg.Section("").Key("PicHeight").RangeFloat64(5, 5, 20))
 	sacpic.PicWeight = vg.Length(cfg.Section("").Key("PicWeight").RangeFloat64(20, 10, 40))
-	sacpic.LineSize = cfg.Section("").Key("LineSize").RangeFloat64(0.1, 0.01, 1)
+	sacpic.LineSize = cfg.Section("").Key("LineSize").RangeFloat64(0.1, 0.01, 2)
 	log.Printf("\nPicHeight: %v\nPicWeight: %v\nLineSize: %v", sacpic.PicHeight, sacpic.PicWeight, sacpic.LineSize)
 }
 
@@ -82,7 +82,22 @@ func main() {
 				option := optionAndArguments[0]
 				arguments := optionAndArguments[1:]
 				switch option {
-				case "kill", "k", "quit", "q":
+				case "fft":
+					if len(sacHead) == 0 {
+						fmt.Println("no data, please read SAC file first")
+						continue
+					}
+					for index := range sacData {
+						sacData[index].Fft()
+					}
+				case "rmean":
+					for index := range sacHead {
+						var mean = floats.Sum(sacData[index].Data) / float64(len(sacData[index].Data))
+						for i := range sacData[index].Data {
+							sacData[index].Data[i] -= mean
+						}
+					}
+				case "kill", "k", "quit", "q", "exit":
 					loop = false
 				case "read", "r":
 					err := readSACFile(&inputFileNames, arguments, &sacHead, &sacData)
@@ -95,7 +110,6 @@ func main() {
 						sacHead[index].Depmin = float32(floats.Min(sacData[index].Data))
 						sacHead[index].Depmen = float32(floats.Sum(sacData[index].Data) / float64(len(sacData[index].Data)))
 					}
-
 				case "lh":
 					if len(sacHead) == 0 {
 						fmt.Println("no data, please read SAC file first")
@@ -209,6 +223,20 @@ func main() {
 					sacpic.Plot2(inputFileNames, sacHead, sacData)
 					fmt.Println("Picture saved successfully")
 					sacpic.OpenBrowser("P2" + sacpic.FileType)
+				case "plotfft", "pf":
+					if len(sacHead) == 0 {
+						fmt.Println("no data, please read SAC file first")
+						continue
+					}
+					sacpic.PlotFft(inputFileNames, sacHead, sacData)
+					fmt.Println("Picture saved successfully")
+				case "plotfft1", "pf1":
+					if len(sacHead) == 0 {
+						fmt.Println("no data, please read SAC file first")
+						continue
+					}
+					sacpic.PlotFft1(inputFileNames, sacHead, sacData)
+					sacpic.OpenBrowser("PF1" + sacpic.FileType)
 				default:
 					fmt.Println("Command not currently supported")
 				}
