@@ -1,7 +1,7 @@
 package sacpic
 
 import (
-	"sacgo/sacio"
+	"github.com/vintingb/sacgo/sacio"
 )
 
 func Plot(fileNames []string, sacHead []sacio.SacHead, sacData []sacio.SacData) {

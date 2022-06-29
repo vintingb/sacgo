@@ -32,11 +32,11 @@ func TestSac_NewSac(t *testing.T) {
 	sac := new(Sac)
 	sacHead := new(SacHead)
 	sacData := new(SacData)
-	err := sacHead.ReadHead("test.SAC")
+	err := sacHead.Read("test.SAC")
 	if err != nil {
 		t.Error("read file error", err)
 	}
-	err = sacData.ReadData("test.SAC")
+	err = sacData.Read("test.SAC")
 	if err != nil {
 		t.Error("read file error", err)
 	}

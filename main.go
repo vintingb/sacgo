@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/peterh/liner"
+	"github.com/vintingb/sacgo/sacio"
+	"github.com/vintingb/sacgo/sacpic"
 	"gonum.org/v1/gonum/floats"
 	"gonum.org/v1/plot/vg"
 	"gopkg.in/ini.v1"
@@ -10,8 +12,6 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
-	"sacgo/sacio"
-	"sacgo/sacpic"
 	"strings"
 )
 
@@ -122,7 +122,7 @@ func main() {
 							immutable := reflect.ValueOf(&tmp).Elem()
 							switch headString[0] {
 							case sacio.K.K:
-								hs := tmp.HeadToString()
+								hs := tmp.Format()
 								immutable := reflect.ValueOf(hs).Elem()
 								if headString == sacio.K.Kzdate {
 									fmt.Println(kzdate(tmp.Nzyear, tmp.Nzjday))

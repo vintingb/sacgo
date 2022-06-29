@@ -2,6 +2,7 @@ package sacpic
 
 import (
 	"fmt"
+	"github.com/vintingb/sacgo/sacio"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
@@ -9,7 +10,6 @@ import (
 	"gonum.org/v1/plot/vg/vgpdf"
 	"image/color"
 	"os"
-	"sacgo/sacio"
 )
 
 type PicData struct {
