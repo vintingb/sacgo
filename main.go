@@ -200,7 +200,7 @@ func main() {
 						fmt.Printf("%v ", v)
 					}
 					fmt.Println()
-				case string('p'), "plot":
+				case string('p'), "line":
 					if len(sacHead) == 0 {
 						fmt.Println("no data, please read SAC file first")
 						continue
