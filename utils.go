@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/vintingb/sacgo/sacio"
 	"io/ioutil"
 	"log"
 	"os"
-	"sacgo/sacio"
 	"strings"
 )
 
@@ -40,11 +40,11 @@ func readSACFile(inputFileNames *[]string, arguments []string, sacHead *[]sacio.
 				*inputFileNames = append(*inputFileNames, inputFileName)
 				tmpHead := new(sacio.SacHead)
 				tmpData := new(sacio.SacData)
-				err := tmpHead.ReadHead(inputFileName)
+				err := tmpHead.Read(inputFileName)
 				if err != nil {
 					return err
 				}
-				err = tmpData.ReadData(inputFileName)
+				err = tmpData.Read(inputFileName)
 				if err != nil {
 					return err
 				}
@@ -60,11 +60,11 @@ func readSACFile(inputFileNames *[]string, arguments []string, sacHead *[]sacio.
 			}
 			tmpHead := new(sacio.SacHead)
 			tmpData := new(sacio.SacData)
-			err := tmpHead.ReadHead(inputFileName)
+			err := tmpHead.Read(inputFileName)
 			if err != nil {
 				return err
 			}
-			err = tmpData.ReadData(inputFileName)
+			err = tmpData.Read(inputFileName)
 			if err != nil {
 				return err
 			}

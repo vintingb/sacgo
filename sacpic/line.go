@@ -5,13 +5,11 @@ import (
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
 	"gonum.org/v1/plot/vg/draw"
-	"image/color"
 )
 
 type line struct {
 	plotter.XYs
 	draw.LineStyle
-	FillColor color.Color
 }
 
 func NewLine(data plotter.XYs) (*line, error) {
@@ -28,26 +26,6 @@ func (pts *line) Plot(c draw.Canvas, plt *plot.Plot) {
 	for i, p := range pts.XYs {
 		ps[i].X = trX(p.X)
 		ps[i].Y = trY(p.Y)
-	}
-
-	if pts.FillColor != nil && len(ps) > 0 {
-		minY := trY(plt.Y.Min)
-		fillPoly := []vg.Point{{X: ps[0].X, Y: minY}}
-		fillPoly = append(fillPoly, ps...)
-		fillPoly = append(fillPoly, vg.Point{X: ps[len(ps)-1].X, Y: minY})
-		fillPoly = c.ClipPolygonXY(fillPoly)
-		if len(fillPoly) > 0 {
-			c.SetColor(pts.FillColor)
-			var pa vg.Path
-			prev := fillPoly[0]
-			pa.Move(prev)
-			for _, pt := range fillPoly[1:] {
-				pa.Line(pt)
-				prev = pt
-			}
-			pa.Close()
-			c.Fill(pa)
-		}
 	}
 
 	lines := c.ClipLinesXY(ps)
@@ -74,23 +52,6 @@ func (pts *line) DataRange() (xmin, xmax, ymin, ymax float64) {
 }
 
 func (pts *line) Thumbnail(c *draw.Canvas) {
-	if pts.FillColor != nil {
-		var topY vg.Length
-		if pts.LineStyle.Width == 0 {
-			topY = c.Max.Y
-		} else {
-			topY = (c.Min.Y + c.Max.Y) / 2
-		}
-		points := []vg.Point{
-			{X: c.Min.X, Y: c.Min.Y},
-			{X: c.Min.X, Y: topY},
-			{X: c.Max.X, Y: topY},
-			{X: c.Max.X, Y: c.Min.Y},
-		}
-		poly := c.ClipPolygonY(points)
-		c.FillPolygon(pts.FillColor, poly)
-	}
-
 	if pts.LineStyle.Width != 0 {
 		y := c.Center().Y
 		c.StrokeLine2(pts.LineStyle, c.Min.X, y, c.Max.X, y)

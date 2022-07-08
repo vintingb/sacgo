@@ -14,7 +14,7 @@ func TestTick(t *testing.T) {
 	p := plot.New()
 	p.Title.Text = "Title"
 	p.X.Label.Text = "X [mm]"
-	p.Y.Label.Text = "Y [A.U.]"
+	p.Y.Label.Text = "Ys [A.U.]"
 	p.X.Label.Position = draw.PosRight
 	p.Y.Label.Position = draw.PosTop
 	p.X.Min = 100
@@ -27,7 +27,7 @@ func TestTick(t *testing.T) {
 
 	err := p.Save(10*vg.Centimeter, 10*vg.Centimeter, "DefaultTicks.png")
 	if err != nil {
-		log.Fatalf("could not save plot: %+v", err)
+		log.Fatalf("could not save line: %+v", err)
 	}
 	ExampleAlign()
 }

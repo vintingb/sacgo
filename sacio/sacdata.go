@@ -14,7 +14,7 @@ type SacData struct {
 	Abs  []float64
 }
 
-func (d *SacData) ReadData(fileName string) error {
+func (d *SacData) Read(fileName string) error {
 	fp, err := os.Open(fileName)
 	if err != nil {
 		return err

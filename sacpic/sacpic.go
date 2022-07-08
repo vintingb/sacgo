@@ -2,6 +2,7 @@ package sacpic
 
 import (
 	"fmt"
+	"github.com/vintingb/sacgo/sacio"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
@@ -9,7 +10,6 @@ import (
 	"gonum.org/v1/plot/vg/vgpdf"
 	"image/color"
 	"os"
-	"sacgo/sacio"
 )
 
 type PicData struct {
@@ -59,7 +59,7 @@ func NewPicData(sacHead []sacio.SacHead, sacData []sacio.SacData) []PicData {
 func SavePic(d *[]PicData, fileNames []string, m mod) {
 	switch m {
 	case plot0:
-		//  plot
+		//  line
 		for k := range fileNames {
 			go func(k int) {
 				wg.Add(1)
@@ -77,7 +77,7 @@ func SavePic(d *[]PicData, fileNames []string, m mod) {
 				xText := Magnitude(p.X.Min, p.X.Max)
 				yText := Magnitude(p.Y.Min, p.Y.Max)
 				p.X.Label.Text = fmt.Sprintf("X:10+%d", xText)
-				p.Y.Label.Text = fmt.Sprintf("Y:10+%d", yText)
+				p.Y.Label.Text = fmt.Sprintf("Ys:10+%d", yText)
 				if err := p.Save(W, H, fileNames[k]+FileType); err != nil {
 					panic(err)
 				}
@@ -108,7 +108,7 @@ func SavePic(d *[]PicData, fileNames []string, m mod) {
 				p.X.Label.Text = fmt.Sprintf("X:10%d", xText)
 			}
 			yText := Magnitude(p.Y.Min, p.Y.Max)
-			p.Y.Label.Text = fmt.Sprintf("Y:10+%d", yText)
+			p.Y.Label.Text = fmt.Sprintf("Ys:10+%d", yText)
 			plots[j][0] = p
 		}
 		W, H := newPicSize()
@@ -157,7 +157,7 @@ func SavePic(d *[]PicData, fileNames []string, m mod) {
 		xText := Magnitude(p.X.Min, p.X.Max)
 		yText := Magnitude(p.Y.Min, p.Y.Max)
 		p.X.Label.Text = fmt.Sprintf("X:10+%d", xText)
-		p.Y.Label.Text = fmt.Sprintf("Y:10+%d", yText)
+		p.Y.Label.Text = fmt.Sprintf("Ys:10+%d", yText)
 		if err := p.Save(W, H, "P2"+FileType); err != nil {
 			panic(err)
 		}
@@ -191,7 +191,7 @@ func SavePic(d *[]PicData, fileNames []string, m mod) {
 				xText := Magnitude(p.X.Min, p.X.Max)
 				yText := Magnitude(p.Y.Min, p.Y.Max)
 				p.X.Label.Text = fmt.Sprintf("X:10+%d", xText)
-				p.Y.Label.Text = fmt.Sprintf("Y:10+%d", yText)
+				p.Y.Label.Text = fmt.Sprintf("Ys:10+%d", yText)
 				if err := p.Save(W, H, fileNames[k]+"_FFT"+FileType); err != nil {
 					panic(err)
 				}
@@ -233,7 +233,7 @@ func SavePic(d *[]PicData, fileNames []string, m mod) {
 				p.X.Label.Text = fmt.Sprintf("X:10%d", xText)
 			}
 			yText := Magnitude(p.Y.Min, p.Y.Max)
-			p.Y.Label.Text = fmt.Sprintf("Y:10+%d", yText)
+			p.Y.Label.Text = fmt.Sprintf("Ys:10+%d", yText)
 			plots[j][0] = p
 		}
 		W, H := newPicSize()

@@ -41,11 +41,11 @@ func (sac *Sac) Sac2asc(filename string) error {
 }
 
 func (sac *Sac) Read(fileName string) error {
-	err := sac.sacData.ReadData(fileName)
+	err := sac.sacData.Read(fileName)
 	if err != nil {
 		return err
 	}
-	err = sac.sacHead.ReadHead(fileName)
+	err = sac.sacHead.Read(fileName)
 	if err != nil {
 		return err
 	}

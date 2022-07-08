@@ -1,14 +1,14 @@
-package sacio
+package sac
 
 import (
 	"fmt"
 	"github.com/lunixbochs/struc"
-	"os"
+	"io"
 	"reflect"
 	"strings"
 )
 
-type SacHead struct {
+type sacHead struct {
 	Delta, Depmin, Depmax, Scale, Odelta             float32 `struc:"little"` //0
 	B, E, O, A, Internal1                            float32 `struc:"little"` //20
 	T0, T1, T2, T3, T4                               float32 `struc:"little"` //40
@@ -42,24 +42,24 @@ type SacHead struct {
 	KnetwK, Kdatrd, Kinst                            string  `struc:"little,[8]byte"`
 }
 
-func (h *SacHead) Read(fileName string) error {
-	fp, err := os.Open(fileName)
-	if err != nil {
-		return err
+func (h sacHead) Has(field string) (bool, reflect.Value) {
+	s := strFirstToUpper(strings.ToLower(field))
+	v := reflect.ValueOf(h).FieldByName(s)
+	if v == (reflect.Value{}) {
+		return false, v
 	}
-	defer func(fp *os.File) {
-		err := fp.Close()
-		if err != nil {
-		}
-	}(fp)
-	err = struc.Unpack(fp, h)
+	return true, v
+}
+
+func (h *sacHead) decode(r io.Reader) error {
+	err := struc.Unpack(r, h)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (h *SacHead) Format() string {
+func (h *sacHead) String() string {
 	var tmp strings.Builder
 	v := reflect.ValueOf(*h)
 	for k := 0; k < 70; k += 5 {
